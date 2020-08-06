@@ -1,0 +1,6 @@
+export const UPDATE_CATEGORIES_ACTION = 'update categories'
+export const UPDATE_CATEGORIES_REQUEST = 'request categories'
+export const UPDATE_CATEGORIES_FAILED = 'request categories failed'
+export const EDIT_CATEGORY_REQUEST = 'edit category request'
+export const EDIT_CATEGORY_SUCCESS = 'edit category success'
+export const EDIT_CATEGORY_FAILED = 'edit category failed'
