@@ -13,7 +13,7 @@ export interface CategoryState {
     selectedIndex: number,
     loadingCategories: boolean,
     editLoading: boolean,
-    editSuccessMessage?: string
+    editSuccessMessage?: string,
 }
 
 const INIT_STATE: CategoryState = {

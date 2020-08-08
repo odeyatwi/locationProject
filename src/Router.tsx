@@ -1,14 +1,44 @@
-import React from "react";
-import {Router, Scene, Stack} from "react-native-router-flux";
+import React, {useEffect} from "react";
+import {Actions, Router, Scene, Stack} from "react-native-router-flux";
 import CategoriesScreen from "./screens/Category/CategoriesScreen";
+import EditCategoryScreen from "./screens/Category/EditCategoryScreen";
+import {connect} from "react-redux";
+import {ThunkDispatch} from "redux-thunk";
+import {GlobalState} from "./redux/reducers/GlobalState";
+import {RootAction} from "./redux/actions/ActionsTypes";
+import {currentScreenName, getPreviousScreen} from "./redux/actions/NavigationActions";
+import {useBackHandler} from "@react-native-community/hooks";
+import {BackHandler} from "react-native";
+import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN} from "./ScreensNames";
 
+interface DispatchProps {
+    currentScreen: (name:string) => void
+}
 
-const RouterComponent: React.FunctionComponent =()=>{
+const RouterComponent: React.FunctionComponent<DispatchProps> =(props)=>{
+    useBackHandler(()=>{
+        if((Actions.state as any).index == 0){
+            BackHandler.exitApp()
+            return true
+        }
+        props.currentScreen(getPreviousScreen())
+        return false
+    })
+    useEffect(()=>{
+        props.currentScreen(CATEGORIES_SCREEN)
+    },[null])
     return <Router>
         <Stack key="root">
-            <Scene key="login" component={CategoriesScreen} initial hideNavBar />
+            <Scene key={CATEGORIES_SCREEN} component={CategoriesScreen} initial hideNavBar />
+            <Scene key={EDIT_CATEGORY_SCREEN} component={EditCategoryScreen} hideNavBar />
         </Stack>
     </Router>
 }
 
-export default RouterComponent
+function mapDispatchToProps(dispatch: ThunkDispatch<GlobalState, {}, RootAction>): DispatchProps {
+    return {
+        currentScreen: (name)=> dispatch(currentScreenName(name))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(RouterComponent)

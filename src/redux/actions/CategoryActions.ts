@@ -11,7 +11,6 @@ import {AnyAction} from "redux";
 import {ThunkDispatch} from "redux-thunk";
 import {deleteCategoryFromDB, getAllCategoriesFromDB, saveCategoryToDB, updateCategory} from "../../data/CategoryDB";
 
-
 export const chosenIndex = (index: number) => action(CHOSEN_CATEGORY,index)
 
 export const updateCategories =

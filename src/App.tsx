@@ -5,9 +5,10 @@ import {
 } from 'react-native';
 import {Provider} from "react-redux";
 import store from "./redux"
-import {Appbar, Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider} from 'react-native-paper';
 import RouterComponent from "./Router";
 import appTheme from "./theme/appTheme";
+import MyAppBar from "./components/AppBar";
 
 const App = () => {
     return (
@@ -15,21 +16,10 @@ const App = () => {
             <StatusBar barStyle="dark-content"/>
             <Provider store={store}>
                 <PaperProvider theme={appTheme}>
-                <SafeAreaView style={{flex:1}}>
-                <Appbar>
-                    <Appbar.Action
-                        icon="archive"
-                        onPress={() => console.log('Pressed archive')}
-                    />
-                    <Appbar.Action icon="mail" onPress={() => console.log('Pressed mail')} />
-                    <Appbar.Action icon="label" onPress={() => console.log('Pressed label')} />
-                    <Appbar.Action
-                        icon="delete"
-                        onPress={() => console.log('Pressed delete')}
-                    />
-                </Appbar>
-                <RouterComponent/>
-                </SafeAreaView>
+                    <SafeAreaView style={{flex: 1}}>
+                        <MyAppBar/>
+                        <RouterComponent/>
+                    </SafeAreaView>
                 </PaperProvider>
             </Provider>
         </>
