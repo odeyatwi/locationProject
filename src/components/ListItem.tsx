@@ -3,7 +3,7 @@ import {Card, Avatar, Colors} from "react-native-paper";
 import {StyleSheet} from "react-native";
 
 interface Props {
-    onPress: () => void
+    onPress: () => void,
     isSelected: boolean,
     title: string
 }

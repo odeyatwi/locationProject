@@ -18,15 +18,16 @@ interface DispatchProps {
 const RouterComponent: React.FunctionComponent<DispatchProps> =(props)=>{
     useBackHandler(()=>{
         if((Actions.state as any).index == 0){
-            BackHandler.exitApp()
-            return true
+            BackHandler.exitApp();
+            return true;
         }
-        props.currentScreen(getPreviousScreen())
-        return false
+        props.currentScreen(getPreviousScreen());
+        return false;
     })
     useEffect(()=>{
-        props.currentScreen(CATEGORIES_SCREEN)
+        props.currentScreen(CATEGORIES_SCREEN);
     },[null])
+
     return <Router>
         <Stack key="root">
             <Scene key={CATEGORIES_SCREEN} component={CategoriesScreen} initial hideNavBar />

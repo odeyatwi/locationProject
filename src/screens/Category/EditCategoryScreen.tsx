@@ -11,6 +11,7 @@ import {currentTopBar, popScreen} from "../../redux/actions/NavigationActions";
 import {TopBarAction} from "../../redux/reducers/NavigationReducer";
 import {addCategory, clearMessage, editCategory} from "../../redux/actions/CategoryActions";
 import Loader from "../../components/Loader";
+import {dismissError} from "../../redux/actions/ErrorActions";
 
 interface PassProps {
     category?: Category
@@ -19,7 +20,8 @@ interface PassProps {
 interface StateProps {
     isLoading: boolean,
     currentScreen: string,
-    successMessage?: string
+    successMessage?: string,
+    errorMessage?: string
 }
 
 interface DispatchProps {
@@ -28,6 +30,7 @@ interface DispatchProps {
     addCategory: (name: string) => void,
     editCategory: (id: string, name: string) => void,
     successMessageHandled: () => void
+    dismissError: () => void
 }
 
 type Props = StateProps & DispatchProps & PassProps
@@ -73,6 +76,10 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
         props.popScreen()
     }, [])
 
+    const onDismissErrorSnackBar = useCallback(()=>{
+        props.dismissError()
+    },[])
+
     return <>
         <View style={styles.container}>
             <TextInput
@@ -87,9 +94,17 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
             <Snackbar
                 visible={!!props.successMessage}
                 onDismiss={onDismissSuccessSnackBar}
-                duration={Snackbar.DURATION_SHORT}
+                duration={100}
             >
                 {props.successMessage}
+            </Snackbar>
+            <Snackbar
+                visible={!!props.errorMessage && props.currentScreen == EDIT_CATEGORY_SCREEN}
+                onDismiss={onDismissErrorSnackBar}
+                duration={100}
+                style={{backgroundColor: Colors.red400}}
+            >
+                {props.errorMessage}
             </Snackbar>
             <Loader isVisible={props.isLoading}/>
         </View>
@@ -108,10 +123,12 @@ const styles = StyleSheet.create({
 function mapStateToProps(state: GlobalState): StateProps {
     const {editLoading, editSuccessMessage} = state.categoriesState
     const {currentScreenName} = state.navigation
+    const {error} = state.errors
     return {
         isLoading: editLoading,
         currentScreen: currentScreenName,
-        successMessage: editSuccessMessage
+        successMessage: editSuccessMessage,
+        errorMessage: error
     }
 }
 
@@ -122,7 +139,8 @@ function mapDispatchToProps(dispatch: ThunkDispatch<GlobalState, {}, RootAction>
         popScreen: () => dispatch(popScreen()),
         addCategory: (name) => dispatch(addCategory(name)),
         editCategory: (id, name) => dispatch(editCategory(id, name)),
-        successMessageHandled: () => dispatch(clearMessage())
+        successMessageHandled: () => dispatch(clearMessage()),
+        dismissError: () => dispatch(dismissError())
     }
 }
 

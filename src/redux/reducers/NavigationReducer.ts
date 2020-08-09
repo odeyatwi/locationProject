@@ -23,14 +23,14 @@ const INIT_STATE: NavigationState = {
 export default (state: NavigationState = INIT_STATE, action: NavigationActions): NavigationState => {
     switch (action.type) {
         case SCREEN_NAME:
-            return {...state, currentScreenName: action.payload}
+            return {...state, currentScreenName: action.payload};
         case UPDATE_TOP_BAR_ACTIONS:
             return { ...state,
                 topBarTitle: action.payload.name,
                 rightActions: action.payload.rightActions,
                 leftActions: action.payload.leftActions
-            }
+            };
         default:
-            return state
+            return state;
     }
 };

@@ -6,12 +6,12 @@ import * as navigationActions from "./NavigationActions";
 import {ThunkDispatch} from "redux-thunk";
 
 
-export type CategoryActions = ActionType<typeof categoriesActions>
+export type ErrorActions = ActionType<typeof errorActions>;
 
-export type ErrorActions = ActionType<typeof errorActions>
+export type CategoryActions = ActionType<typeof categoriesActions> | ErrorActions;
 
-export type NavigationActions = ActionType<typeof navigationActions>
+export type NavigationActions = ActionType<typeof navigationActions> | ErrorActions;
 
-export type RootAction = CategoryActions | ErrorActions | NavigationActions | AnyAction
+export type RootAction = CategoryActions | ErrorActions | NavigationActions | AnyAction;
 
-export type anyDispatch = ThunkDispatch<{}, {}, Action>
+export type anyDispatch = ThunkDispatch<{}, {}, Action>;

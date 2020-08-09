@@ -8,4 +8,4 @@ export default combineReducers<GlobalState>({
     categoriesState: CategoryReducer,
     errors: ErrorReducer,
     navigation: NavigationReducer
-})
+});

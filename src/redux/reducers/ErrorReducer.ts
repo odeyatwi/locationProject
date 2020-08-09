@@ -11,10 +11,10 @@ const INIT_STATE: ErrorState = {}
 export default (state: ErrorState = INIT_STATE, action: ErrorActions): ErrorState => {
     switch (action.type) {
         case HANDLE_ERROR:
-            return {...state, error: action.payload}
+            return {...state, error: action.payload};
         case DISMISS_ERROR:
-            return INIT_STATE
+            return INIT_STATE;
         default:
-            return state
+            return state;
     }
 };

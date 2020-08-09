@@ -33,7 +33,6 @@ export async function openCategoryDB() {
 
 export async function saveCategoryToDB(name: string) {
     return new Promise<void>(async (resolve, reject) => {
-        console.log('save',name)
         db.transaction(function (tx) {
             tx.executeSql(
                 'INSERT INTO table_category (name) VALUES (?)',
@@ -46,7 +45,7 @@ export async function saveCategoryToDB(name: string) {
                 (_, error) => reject(error)
             );
         });
-    })
+    });
 }
 
 export async function getAllCategoriesFromDB() {

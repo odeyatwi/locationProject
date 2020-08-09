@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useCallback, useEffect} from "react";
 import {View, StyleSheet, FlatList, ListRenderItemInfo, TouchableWithoutFeedback} from "react-native";
-import {Colors} from "react-native-paper";
+import {Colors, Snackbar} from "react-native-paper";
 import {GlobalState} from "../../redux/reducers/GlobalState";
 import {ThunkDispatch} from "redux-thunk";
 import {RootAction} from "../../redux/actions/ActionsTypes";
@@ -12,30 +12,33 @@ import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN} from "../../ScreensNames";
 import {TopBarAction} from "../../redux/reducers/NavigationReducer";
 import {currentTopBar, pushScreen} from "../../redux/actions/NavigationActions";
 import Loader from "../../components/Loader";
+import {dismissError} from "../../redux/actions/ErrorActions";
 
 
 interface StateProps {
     categories: Category[],
     currentIndex: number,
     isLoading: boolean,
-    currentScreen: string
+    currentScreen: string,
+    errorMessage?: string
 }
 
 interface DispatchProps {
     chosenIndex: (index: number) => void,
-    updateActions: (title: string, rightActions: TopBarAction[], leftActions: TopBarAction[]) => void
+    updateActions: (title: string, rightActions: TopBarAction[], leftActions: TopBarAction[]) => void,
     pushScreen: (name: string, props: any) => void,
     deleteCategory: (id: string) => void,
-    getAllCategories: () => void
+    getAllCategories: () => void,
+    dismissError: () => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps;
 
 const CategoriesScreen: FunctionComponent<Props> = (props) => {
     const setIndexSelected = useCallback((index: number) => () => props.chosenIndex(index), [])
 
     useEffect(() => {
-        props.getAllCategories()
+        props.getAllCategories();
     }, [])
 
     const _renderItem = useCallback((item: ListRenderItemInfo<Category>) => {
@@ -47,8 +50,7 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
     }, [props.currentIndex])
 
     const setSelectedAction = () => {
-        const category = props.categories[props.currentIndex]
-        console.log('selected', category)
+        const category = props.categories[props.currentIndex];
         props.updateActions('', [
             {
                 icon: "pencil",
@@ -61,7 +63,7 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
                     props.deleteCategory(category.id)
                 }
             }
-        ], [])
+        ], []);
     }
 
     const setNotSelectedActions = () => {
@@ -71,31 +73,36 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
                 onPress: () =>
                     props.pushScreen(EDIT_CATEGORY_SCREEN, {})
             },
-        ], [])
+        ], []);
     }
 
     useEffect(() => {
-        console.log('screen change', props.currentScreen)
         if (props.currentScreen == CATEGORIES_SCREEN) {
             if (props.currentIndex > -1) {
-                setSelectedAction()
+                setSelectedAction();
             } else {
-                setNotSelectedActions()
+                setNotSelectedActions();
             }
         }
-    }, [props.currentScreen])
+    }, [props.currentScreen]);
+
 
     useEffect(() => {
         if (props.currentScreen == CATEGORIES_SCREEN) {
             if (props.currentIndex > -1) {
-                setSelectedAction()
+                setSelectedAction();
             } else {
-                setNotSelectedActions()
+                setNotSelectedActions();
             }
         }
-    }, [props.currentIndex])
+    }, [props.currentIndex]);
 
-    const _keyExtractor = useCallback((item: Category) => item.id, [])
+    const _keyExtractor = useCallback((item: Category) => item.id, []);
+
+    const onDismissErrorSnackBar = useCallback(()=>{
+        props.dismissError()
+    },[])
+
     return <TouchableWithoutFeedback onPress={setIndexSelected(-1)}>
         <View style={styles.container}>
             <FlatList
@@ -104,6 +111,14 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
                 keyExtractor={_keyExtractor}
             />
             <Loader isVisible={props.isLoading}/>
+            <Snackbar
+                visible={!!props.errorMessage && props.currentScreen == CATEGORIES_SCREEN}
+                onDismiss={onDismissErrorSnackBar}
+                duration={500}
+                style={{backgroundColor: Colors.red400}}
+            >
+                {props.errorMessage}
+            </Snackbar>
         </View>
     </TouchableWithoutFeedback>
 }
@@ -116,13 +131,15 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(state: GlobalState): StateProps {
-    const {categories, selectedIndex, loadingCategories} = state.categoriesState
-    const {currentScreenName} = state.navigation
+    const {categories, selectedIndex, loadingCategories} = state.categoriesState;
+    const {currentScreenName} = state.navigation;
+    const {error} = state.errors
     return {
         categories,
         currentIndex: selectedIndex,
         isLoading: loadingCategories,
-        currentScreen: currentScreenName
+        currentScreen: currentScreenName,
+        errorMessage: error
     }
 }
 
@@ -133,7 +150,8 @@ function mapDispatchToProps(dispatch: ThunkDispatch<GlobalState, {}, RootAction>
             dispatch(currentTopBar(title, rightActions, leftActions)),
         pushScreen: (name, props) => dispatch(pushScreen(name, props)),
         deleteCategory: (id: string) => dispatch(deleteCategory(id)),
-        getAllCategories: () => dispatch(getAllCategories())
+        getAllCategories: () => dispatch(getAllCategories()),
+        dismissError: () => dispatch(dismissError())
     }
 }
 
