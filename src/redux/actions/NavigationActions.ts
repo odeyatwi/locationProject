@@ -14,10 +14,14 @@ export function pushScreen(name: string, props: any) {
 }
 
 export function popScreen() {
+    const prevName = getPreviousScreen()
+    console.log('prevScreen', prevName)
     Actions.pop({animated:true})
-    return currentScreenName(getPreviousScreen())
+    console.log('after pop')
+    return currentScreenName(prevName)
 }
 
 export function getPreviousScreen(): string{
+    console.log(Actions.state)
     return (Actions.state as any).routes[(Actions.state as any).index - 1].routeName
 }

@@ -3,7 +3,7 @@ import {CategoryActions} from "../actions/ActionsTypes";
 import {
     CHOSEN_CATEGORY,
     EDIT_CATEGORY_REQUEST,
-    EDIT_CATEGORY_SUCCESS,
+    EDIT_CATEGORY_SUCCESS, EDIT_CATEGORY_SUCCESS_CLEAN,
     UPDATE_CATEGORIES_ACTION,
     UPDATE_CATEGORIES_REQUEST
 } from "../actions/types";
@@ -28,13 +28,15 @@ export default (state: CategoryState = INIT_STATE, action: CategoryActions): Cat
         case UPDATE_CATEGORIES_ACTION:
             return {...state, categories: action.payload, loadingCategories: false, selectedIndex: -1}
         case UPDATE_CATEGORIES_REQUEST:
-            return {...state, loadingCategories: true}
+            return {...state, loadingCategories: true,}
         case EDIT_CATEGORY_REQUEST:
             return {...state, editLoading: true, editSuccessMessage: undefined}
         case EDIT_CATEGORY_SUCCESS:
             return {...state, editLoading: false, editSuccessMessage: action.payload}
         case CHOSEN_CATEGORY:
             return {...state, selectedIndex: action.payload}
+        case EDIT_CATEGORY_SUCCESS_CLEAN:
+            return {...state,editSuccessMessage: undefined}
         default:
             return state
     }

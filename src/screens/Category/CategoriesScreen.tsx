@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useCallback, useEffect, useState} from "react";
+import React, {FunctionComponent, useCallback, useEffect} from "react";
 import {View, StyleSheet, FlatList, ListRenderItemInfo, TouchableWithoutFeedback} from "react-native";
 import {Colors} from "react-native-paper";
 import {GlobalState} from "../../redux/reducers/GlobalState";
@@ -6,11 +6,12 @@ import {ThunkDispatch} from "redux-thunk";
 import {RootAction} from "../../redux/actions/ActionsTypes";
 import {connect} from "react-redux";
 import {Category} from "../../data/types/Category";
-import {chosenIndex, deleteCategory} from "../../redux/actions/CategoryActions";
+import {chosenIndex, deleteCategory, getAllCategories} from "../../redux/actions/CategoryActions";
 import ListItem from "../../components/ListItem";
 import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN} from "../../ScreensNames";
 import {TopBarAction} from "../../redux/reducers/NavigationReducer";
 import {currentTopBar, pushScreen} from "../../redux/actions/NavigationActions";
+import Loader from "../../components/Loader";
 
 
 interface StateProps {
@@ -24,36 +25,41 @@ interface DispatchProps {
     chosenIndex: (index: number) => void,
     updateActions: (title: string, rightActions: TopBarAction[], leftActions: TopBarAction[]) => void
     pushScreen: (name: string, props: any) => void,
-    deleteCategory: (id: string) => void
+    deleteCategory: (id: string) => void,
+    getAllCategories: () => void
 }
 
 type Props = StateProps & DispatchProps
 
 const CategoriesScreen: FunctionComponent<Props> = (props) => {
-    const [selected, setSelected] = useState(-1)
-    const setIndexSelected = useCallback((index: number) => () => setSelected(index), [])
+    const setIndexSelected = useCallback((index: number) => () => props.chosenIndex(index), [])
+
+    useEffect(() => {
+        props.getAllCategories()
+    }, [])
 
     const _renderItem = useCallback((item: ListRenderItemInfo<Category>) => {
         return <ListItem
             onPress={setIndexSelected(item.index)}
-            isSelected={selected == item.index}
+            isSelected={props.currentIndex == item.index}
             title={item.item.name}
         />
-    }, [selected])
+    }, [props.currentIndex])
 
-    const setSelectedAction = () =>{
-        const category = props.categories[selected]
+    const setSelectedAction = () => {
+        const category = props.categories[props.currentIndex]
+        console.log('selected', category)
         props.updateActions('', [
             {
                 icon: "pencil",
                 onPress: () => {
-                    console.log('push category',category)
-                    props.pushScreen(EDIT_CATEGORY_SCREEN, {category}
-                    )
+                    props.pushScreen(EDIT_CATEGORY_SCREEN, {category})
                 }
             }, {
                 icon: "delete",
-                onPress: () => props.deleteCategory(category.id)
+                onPress: () => {
+                    props.deleteCategory(category.id)
+                }
             }
         ], [])
     }
@@ -71,7 +77,7 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
     useEffect(() => {
         console.log('screen change', props.currentScreen)
         if (props.currentScreen == CATEGORIES_SCREEN) {
-            if (selected > -1) {
+            if (props.currentIndex > -1) {
                 setSelectedAction()
             } else {
                 setNotSelectedActions()
@@ -81,15 +87,15 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
 
     useEffect(() => {
         if (props.currentScreen == CATEGORIES_SCREEN) {
-            if (selected > -1) {
+            if (props.currentIndex > -1) {
                 setSelectedAction()
             } else {
                 setNotSelectedActions()
             }
         }
-    }, [selected])
+    }, [props.currentIndex])
 
-    const _keyExtractor = useCallback((item: Category, index: number) => item.id, [])
+    const _keyExtractor = useCallback((item: Category) => item.id, [])
     return <TouchableWithoutFeedback onPress={setIndexSelected(-1)}>
         <View style={styles.container}>
             <FlatList
@@ -97,6 +103,7 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
                 renderItem={_renderItem}
                 keyExtractor={_keyExtractor}
             />
+            <Loader isVisible={props.isLoading}/>
         </View>
     </TouchableWithoutFeedback>
 }
@@ -125,7 +132,8 @@ function mapDispatchToProps(dispatch: ThunkDispatch<GlobalState, {}, RootAction>
         updateActions: (title, rightActions, leftActions) =>
             dispatch(currentTopBar(title, rightActions, leftActions)),
         pushScreen: (name, props) => dispatch(pushScreen(name, props)),
-        deleteCategory: (id: string) => dispatch(deleteCategory(id))
+        deleteCategory: (id: string) => dispatch(deleteCategory(id)),
+        getAllCategories: () => dispatch(getAllCategories())
     }
 }
 

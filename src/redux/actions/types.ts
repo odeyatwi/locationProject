@@ -1,6 +1,7 @@
 export const UPDATE_CATEGORIES_ACTION = 'update categories'
 export const UPDATE_CATEGORIES_REQUEST = 'request categories'
 export const CHOSEN_CATEGORY = 'chosen category'
+export const EDIT_CATEGORY_SUCCESS_CLEAN = 'edit success clear'
 export const EDIT_CATEGORY_REQUEST = 'edit category request'
 export const EDIT_CATEGORY_SUCCESS = 'edit category success'
 // export const EDIT_CATEGORY_FAILED = 'edit category failed'

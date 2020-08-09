@@ -22,31 +22,30 @@ export async function openCategoryDB() {
                         txn.executeSql(
                             'CREATE TABLE IF NOT EXISTS table_category (name VARCHAR(50))',
                             [])
-                        resolve()
                     }
+                    resolve()
                 },
+                (_, error) => reject(error)
             );
-        })
-            .then(_ => db.close())
-            .catch(e => reject(e));
+        });
     });
 }
 
 export async function saveCategoryToDB(name: string) {
     return new Promise<void>(async (resolve, reject) => {
+        console.log('save',name)
         db.transaction(function (tx) {
             tx.executeSql(
                 'INSERT INTO table_category (name) VALUES (?)',
                 [name],
                 (tx, results) => {
+                    console.log('save category',results.rowsAffected)
                     if (results.rowsAffected == 0) reject('Can`t save this Category');
                     else resolve();
                 },
-                _ => reject(new Error('something went wrong'))
+                (_, error) => reject(error)
             );
-        })
-            .then(_ => db.close())
-            .catch(e => reject(e));
+        });
     })
 }
 
@@ -61,21 +60,20 @@ export async function getAllCategoriesFromDB() {
                     for (let i = 0; i < results.rows.length; ++i) {
                         temp.push({
                             name: results.rows.item(i).name,
-                            id: results.rows.item(i).rawid
+                            id: results.rows.item(i).rowid.toString()
                         });
                     }
                     resolve(temp);
                 },
-                _ => reject(new Error('something went wrong'))
+                (_, error) => reject(error)
             );
-        })
-            .then(_ => db.close())
-            .catch(e => reject(e));
+        });
     });
 }
 
 export async function deleteCategoryFromDB(category_id: string) {
     return new Promise<void>((resolve, reject) => {
+        console.log('delete', category_id)
         db.transaction(tx => {
             tx.executeSql(
                 'DELETE FROM table_category where rowid=?',
@@ -84,11 +82,9 @@ export async function deleteCategoryFromDB(category_id: string) {
                     if (results.rowsAffected == 0) reject(new Error('Can`t delete this Category'));
                     else resolve();
                 },
-                _ => reject(new Error('something went wrong'))
+                (_, error) => reject(error)
             );
-        })
-            .then(_ => db.close())
-            .catch(e => reject(e));
+        });
     });
 }
 
@@ -102,10 +98,8 @@ export async function updateCategory(id: string, name: string) {
                     if (results.rowsAffected == 0) reject(new Error('Can`t update this Category'));
                     else resolve();
                 },
-                _ => reject(new Error('something went wrong'))
+                (_, error) => reject(error)
             );
-        })
-            .then(_ => db.close())
-            .catch(e => reject(e));
+        });
     });
 }

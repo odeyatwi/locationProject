@@ -2,8 +2,6 @@ import React, {FunctionComponent} from "react";
 import {Appbar} from "react-native-paper";
 import {connect} from "react-redux";
 import {GlobalState} from "../redux/reducers/GlobalState";
-import {ThunkDispatch} from "redux-thunk";
-import {RootAction} from "../redux/actions/ActionsTypes";
 import {TopBarAction} from "../redux/reducers/NavigationReducer";
 
 interface StateProps {
@@ -17,9 +15,9 @@ type Props = StateProps
 
 const MyAppBar: FunctionComponent<Props> = (props) => {
     return <Appbar>
-        {props.leftActions.map(action=><Appbar.Action icon={action.icon} onPress={action.onPress}/>)}
+        {props.leftActions.map(action=><Appbar.Action icon={action.icon} onPress={action.onPress} key={action.icon}/>)}
         <Appbar.Content title={props.title} />
-        {props.rightActions.reverse().map(action=><Appbar.Action icon={action.icon} onPress={action.onPress}/>)}
+        {props.rightActions.reverse().map(action=><Appbar.Action icon={action.icon} onPress={action.onPress} key={action.icon}/>)}
 
     </Appbar>
 }
