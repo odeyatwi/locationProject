@@ -5,7 +5,6 @@ import {
     EDIT_CATEGORY_REQUEST,
     EDIT_CATEGORY_SUCCESS,
     EDIT_CATEGORY_SUCCESS_CLEAN,
-    HANDLE_ERROR,
     UPDATE_CATEGORIES_ACTION,
     UPDATE_CATEGORIES_REQUEST
 } from "./types";
@@ -27,64 +26,48 @@ export const updateCategories =
     createAsyncAction(
         UPDATE_CATEGORIES_REQUEST,
         UPDATE_CATEGORIES_ACTION,
-        HANDLE_ERROR
+        ''
     )<void, Category[], string>();
 
 export const editCategoryAction =
     createAsyncAction(
         EDIT_CATEGORY_REQUEST,
         EDIT_CATEGORY_SUCCESS,
-        HANDLE_ERROR
+        ''
     )<void, string, string>();
 
 export function getAllCategories() {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-        try {
-            dispatch(updateCategories.request());
-            await openCategoryDB();
-            const categories: Category[] = await getAllCategoriesFromDB();
-            dispatch(updateCategories.success(categories));
-        } catch (e) {
-            dispatch(updateCategories.failure(e.message))
-        }
+        dispatch(updateCategories.request());
+        await openCategoryDB();
+        const categories: Category[] = await getAllCategoriesFromDB();
+        dispatch(updateCategories.success(categories));
     }
 }
 
 export function addCategory(name: string) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-        try {
-            dispatch(editCategoryAction.request());
-            await openCategoryDB()
-            await saveCategoryToDB(name);
-            dispatch(editCategoryAction.success('Category added successfully'));
-            await dispatch(getAllCategories());
-        } catch(e){
-            dispatch(editCategoryAction.failure(e.message))
-        }
+        dispatch(editCategoryAction.request());
+        await openCategoryDB()
+        await saveCategoryToDB(name);
+        dispatch(editCategoryAction.success('Category added successfully'));
+        await dispatch(getAllCategories());
     }
 }
 
 export function deleteCategory(id: string) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-        try {
             dispatch(updateCategories.request());
             await deleteCategoryFromDB(id);
             await dispatch(getAllCategories());
-        } catch(e){
-            dispatch(updateCategories.failure(e.message))
-        }
     }
 }
 
 export function editCategory(id: string, newName: string) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-        try {
             dispatch(editCategoryAction.request());
             await updateCategory(id, newName);
             dispatch(editCategoryAction.success('Category update successfully'));
             await dispatch(getAllCategories());
-        } catch (e) {
-            dispatch(editCategoryAction.failure(e.message))
-        }
     }
 }
