@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useCallback, useEffect, useState,} from "react";
-import {View, StyleSheet} from "react-native";
+import {View, StyleSheet, Keyboard} from "react-native";
 import {Colors, Snackbar, TextInput} from "react-native-paper";
 import {GlobalState} from "../../redux/reducers/GlobalState";
 import {ThunkDispatch} from "redux-thunk";
@@ -40,7 +40,8 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
     const [input, setInput] = useState(props.category ? props.category.name : '')
 
     const saveAction = () => {
-        if (input.length > 0) {
+        Keyboard.dismiss()
+        if (input.length > 0 ) {
             if (props.category) {
                 props.editCategory(props.category.id, input)
             } else {
@@ -104,7 +105,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
             <Snackbar
                 visible={!!props.errorMessage && props.currentScreen == EDIT_CATEGORY_SCREEN}
                 onDismiss={onDismissErrorSnackBar}
-                duration={100}
+                duration={500}
                 style={styles.errorSnackBar}
             >
                 {props.errorMessage}
