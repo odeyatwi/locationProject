@@ -57,7 +57,7 @@ export function addCategory(name: string) {
             await openCategoryDB()
             await saveCategoryToDB(name);
             dispatch(editCategoryAction.success('Category added successfully'));
-            dispatch(getAllCategories());
+            await dispatch(getAllCategories());
         } catch(e){
             dispatch(editCategoryAction.failure(e.message))
         }
@@ -69,7 +69,7 @@ export function deleteCategory(id: string) {
         try {
             dispatch(updateCategories.request());
             await deleteCategoryFromDB(id);
-            dispatch(getAllCategories());
+            await dispatch(getAllCategories());
         } catch(e){
             dispatch(updateCategories.failure(e.message))
         }
@@ -82,7 +82,7 @@ export function editCategory(id: string, newName: string) {
             dispatch(editCategoryAction.request());
             await updateCategory(id, newName);
             dispatch(editCategoryAction.success('Category update successfully'));
-            dispatch(getAllCategories());
+            await dispatch(getAllCategories());
         } catch (e) {
             dispatch(editCategoryAction.failure(e.message))
         }

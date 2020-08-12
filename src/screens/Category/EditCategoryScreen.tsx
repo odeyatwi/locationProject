@@ -12,6 +12,7 @@ import {TopBarAction} from "../../redux/reducers/NavigationReducer";
 import {addCategory, clearMessage, editCategory} from "../../redux/actions/CategoryActions";
 import Loader from "../../components/Loader";
 import {dismissError} from "../../redux/actions/ErrorActions";
+import appTheme from "../../theme/appTheme";
 
 interface PassProps {
     category?: Category
@@ -39,16 +40,18 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
     const [input, setInput] = useState(props.category ? props.category.name : '')
 
     const saveAction = () => {
-        if (props.category) {
-            props.editCategory(props.category.id, input)
-        } else {
-            props.addCategory(input)
+        if (input.length > 0) {
+            if (props.category) {
+                props.editCategory(props.category.id, input)
+            } else {
+                props.addCategory(input)
+            }
         }
     }
 
     const setButtons = () => {
         if (props.currentScreen == EDIT_CATEGORY_SCREEN) {
-            const title = props.category != undefined ? props.category.name : "Add new category"
+            const title = props.category != undefined ? "Edit category" : "Add new category"
             props.updateActions(title, [
                 {
                     icon: "close",
@@ -56,7 +59,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
                         props.popScreen()
                 }, {
                     icon: "content-save",
-                    onPress: () => saveAction()
+                    onPress: input.length == 0 ? undefined : () => saveAction()
 
                 }
             ], [])
@@ -76,9 +79,9 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
         props.popScreen()
     }, [])
 
-    const onDismissErrorSnackBar = useCallback(()=>{
+    const onDismissErrorSnackBar = useCallback(() => {
         props.dismissError()
-    },[])
+    }, [])
 
     return <>
         <View style={styles.container}>
@@ -88,7 +91,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
                 onChangeText={setInput}
                 returnKeyType={'done'}
                 mode={'outlined'}
-                style={{width: '80%', marginStart: 20, marginTop: 40}}
+                style={styles.input}
                 onEndEditing={saveAction}
             />
             <Snackbar
@@ -102,7 +105,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
                 visible={!!props.errorMessage && props.currentScreen == EDIT_CATEGORY_SCREEN}
                 onDismiss={onDismissErrorSnackBar}
                 duration={100}
-                style={{backgroundColor: Colors.red400}}
+                style={styles.errorSnackBar}
             >
                 {props.errorMessage}
             </Snackbar>
@@ -115,7 +118,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.grey100,
-
+    },
+    input: {
+        width: '80%',
+        marginStart: 20,
+        marginTop: 40
+    },
+    errorSnackBar: {
+        backgroundColor: appTheme.colors.error
     }
 })
 

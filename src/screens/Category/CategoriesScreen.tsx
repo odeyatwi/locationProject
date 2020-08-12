@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useCallback, useEffect} from "react";
 import {View, StyleSheet, FlatList, ListRenderItemInfo, TouchableWithoutFeedback} from "react-native";
-import {Colors, Snackbar} from "react-native-paper";
+import {Button, Colors, Snackbar} from "react-native-paper";
 import {GlobalState} from "../../redux/reducers/GlobalState";
 import {ThunkDispatch} from "redux-thunk";
 import {RootAction} from "../../redux/actions/ActionsTypes";
@@ -13,6 +13,7 @@ import {TopBarAction} from "../../redux/reducers/NavigationReducer";
 import {currentTopBar, pushScreen} from "../../redux/actions/NavigationActions";
 import Loader from "../../components/Loader";
 import {dismissError} from "../../redux/actions/ErrorActions";
+import appTheme from "../../theme/appTheme";
 
 
 interface StateProps {
@@ -49,6 +50,10 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
         />
     }, [props.currentIndex])
 
+    const openAddCategory = useCallback(()=>{
+        props.pushScreen(EDIT_CATEGORY_SCREEN, {})
+    },[])
+
     const setSelectedAction = () => {
         const category = props.categories[props.currentIndex];
         props.updateActions('', [
@@ -70,8 +75,8 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
         props.updateActions("Categories", [
             {
                 icon: "plus",
-                onPress: () =>
-                    props.pushScreen(EDIT_CATEGORY_SCREEN, {})
+                onPress: openAddCategory
+
             },
         ], []);
     }
@@ -99,23 +104,32 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
 
     const _keyExtractor = useCallback((item: Category) => item.id, []);
 
-    const onDismissErrorSnackBar = useCallback(()=>{
+    const onDismissErrorSnackBar = useCallback(() => {
         props.dismissError()
-    },[])
+    }, [])
+
+    const renderEmptyComponent = () => {
+        return <View style={styles.emptyContainer}>
+            <Button mode={'text'} color={'rgba(1, 87, 155,.2)'} labelStyle={{fontSize:30}} onPress={openAddCategory}>Add new category</Button>
+        </View>
+    }
 
     return <TouchableWithoutFeedback onPress={setIndexSelected(-1)}>
         <View style={styles.container}>
             <FlatList
+                style={styles.fullContainer}
+                contentContainerStyle={[props.categories.length == 0 && styles.fullContainer]}
                 data={props.categories}
                 renderItem={_renderItem}
                 keyExtractor={_keyExtractor}
+                ListEmptyComponent={renderEmptyComponent}
             />
             <Loader isVisible={props.isLoading}/>
             <Snackbar
                 visible={!!props.errorMessage && props.currentScreen == CATEGORIES_SCREEN}
                 onDismiss={onDismissErrorSnackBar}
                 duration={500}
-                style={{backgroundColor: Colors.red400}}
+                style={styles.errorSnackBar}
             >
                 {props.errorMessage}
             </Snackbar>
@@ -127,6 +141,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.grey100
+    },
+    emptyContainer: {
+        flex: 1,
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    fullContainer: {
+        flex:1
+    },
+    errorSnackBar: {
+        backgroundColor: appTheme.colors.error
     }
 })
 

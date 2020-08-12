@@ -14,19 +14,28 @@ interface StateProps {
 type Props = StateProps
 
 const MyAppBar: FunctionComponent<Props> = (props) => {
+    const renderAction = (action: TopBarAction) => {
+        return <Appbar.Action
+            icon={action.icon}
+            disabled={action.onPress == undefined}
+            onPress={action.onPress}
+            key={action.icon}
+        />
+    }
+
     return <Appbar>
-        {props.leftActions.map(action=><Appbar.Action icon={action.icon} onPress={action.onPress} key={action.icon}/>)}
-        <Appbar.Content title={props.title} />
-        {props.rightActions.reverse().map(action=><Appbar.Action icon={action.icon} onPress={action.onPress} key={action.icon}/>)}
+        {props.leftActions.map(action => renderAction(action))}
+        <Appbar.Content title={props.title}/>
+        {props.rightActions.reverse().map(action => renderAction(action))}
 
     </Appbar>
 }
 
 function mapStateToProps(state: GlobalState): StateProps {
-    const {currentScreenName,topBarTitle,leftActions,rightActions} = state.navigation
+    const {currentScreenName, topBarTitle, leftActions, rightActions} = state.navigation
     return {
         currentScreen: currentScreenName,
-        title:topBarTitle,
+        title: topBarTitle,
         leftActions,
         rightActions
     }

@@ -3,7 +3,7 @@ import {SCREEN_NAME, UPDATE_TOP_BAR_ACTIONS} from "../actions/types";
 
 export interface TopBarAction {
     icon: string,
-    onPress: () => void
+    onPress?: () => void
 }
 
 export interface NavigationState {

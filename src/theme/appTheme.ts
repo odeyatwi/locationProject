@@ -16,7 +16,7 @@ const fontConfig: {default: Fonts} = {
             fontWeight: 'normal',
         },
         thin: {
-            fontFamily: 'RobotoCondensed-light',
+            fontFamily: 'RobotoCondensed-Bold',
             fontWeight: 'normal',
         },
     },
@@ -27,7 +27,8 @@ export default {
     colors:{
         ...DefaultTheme.colors,
         primary: Colors.lightBlue900,
-        accent: Colors.blue50
+        accent: Colors.blue50,
+        error: Colors.red400
     },
     fonts: configureFonts(fontConfig),
 };
