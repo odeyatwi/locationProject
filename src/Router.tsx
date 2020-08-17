@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {Actions, Router, Scene, Stack} from "react-native-router-flux";
-import CategoriesScreen from "./screens/Category/CategoriesScreen";
 import EditCategoryScreen from "./screens/Category/EditCategoryScreen";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "redux-thunk";
@@ -9,7 +8,8 @@ import {RootAction} from "./redux/actions/ActionsTypes";
 import {currentScreenName, getPreviousScreen} from "./redux/actions/NavigationActions";
 import {useBackHandler} from "@react-native-community/hooks";
 import {BackHandler} from "react-native";
-import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN} from "./ScreensNames";
+import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN, MAIN_SCREEN} from "./ScreensNames";
+import MainScreen from "./screens/MainScreen";
 
 interface DispatchProps {
     currentScreen: (name:string) => void
@@ -30,7 +30,7 @@ const RouterComponent: React.FunctionComponent<DispatchProps> =(props)=>{
 
     return <Router>
         <Stack key="root">
-            <Scene key={CATEGORIES_SCREEN} component={CategoriesScreen} initial hideNavBar />
+            <Scene key={MAIN_SCREEN} component={MainScreen} initial hideNavBar />
             <Scene key={EDIT_CATEGORY_SCREEN} component={EditCategoryScreen} hideNavBar />
         </Stack>
     </Router>

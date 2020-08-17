@@ -41,6 +41,9 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
 
     const saveAction = () => {
         Keyboard.dismiss()
+        //done editing will be called
+    }
+    const doneEdit = () => {
         if (input.length > 0 ) {
             if (props.category) {
                 props.editCategory(props.category.id, input)
@@ -60,7 +63,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
                         props.popScreen()
                 }, {
                     icon: "content-save",
-                    onPress: input.length == 0 ? undefined : () => saveAction()
+                    onPress: input.length == 0 ? undefined : saveAction
 
                 }
             ], [])
@@ -93,7 +96,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
                 returnKeyType={'done'}
                 mode={'outlined'}
                 style={styles.input}
-                onEndEditing={saveAction}
+                onEndEditing={doneEdit}
             />
             <Snackbar
                 visible={!!props.successMessage}

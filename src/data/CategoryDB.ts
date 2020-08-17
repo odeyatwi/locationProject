@@ -1,14 +1,5 @@
-import {openDatabase, SQLError} from "react-native-sqlite-storage";
 import {Category} from "./types/Category";
-
-function errorDB(err: SQLError) {
-    console.log("SQL Error: " + err);
-}
-
-function openDB() {
-}
-
-export var db = openDatabase({name: "CategoryDB.db", location: "default"}, openDB, errorDB);
+import {db} from "./index";
 
 export async function openCategoryDB() {
     return new Promise<void>((resolve, reject) => {
