@@ -8,8 +8,9 @@ import {RootAction} from "./redux/actions/ActionsTypes";
 import {currentScreenName, getPreviousScreen} from "./redux/actions/NavigationActions";
 import {useBackHandler} from "@react-native-community/hooks";
 import {BackHandler} from "react-native";
-import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN, MAIN_SCREEN} from "./ScreensNames";
+import {CATEGORIES_SCREEN, EDIT_CATEGORY_SCREEN, EDIT_LOCATION_SCREEN, MAIN_SCREEN} from "./ScreensNames";
 import MainScreen from "./screens/MainScreen";
+import EditLocationScreen from "./screens/Location/EditLocationScreen";
 
 interface DispatchProps {
     currentScreen: (name:string) => void
@@ -32,6 +33,7 @@ const RouterComponent: React.FunctionComponent<DispatchProps> =(props)=>{
         <Stack key="root">
             <Scene key={MAIN_SCREEN} component={MainScreen} initial hideNavBar />
             <Scene key={EDIT_CATEGORY_SCREEN} component={EditCategoryScreen} hideNavBar />
+            <Scene key={EDIT_LOCATION_SCREEN} component={EditLocationScreen} hideNavBar />
         </Stack>
     </Router>
 }

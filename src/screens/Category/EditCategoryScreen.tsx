@@ -87,8 +87,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
         props.dismissError()
     }, [])
 
-    return <>
-        <View style={styles.container}>
+    return <View style={styles.container}>
             <TextInput
                 label="Category name"
                 value={input}
@@ -115,7 +114,6 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
             </Snackbar>
             <Loader isVisible={props.isLoading}/>
         </View>
-    </>
 }
 
 const styles = StyleSheet.create({
