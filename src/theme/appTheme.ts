@@ -28,7 +28,7 @@ export default {
         ...DefaultTheme.colors,
         primary: Colors.lightBlue900,
         accent: Colors.blue50,
-        error: Colors.red400
+        error: Colors.red400,
     },
     fonts: configureFonts(fontConfig),
 };

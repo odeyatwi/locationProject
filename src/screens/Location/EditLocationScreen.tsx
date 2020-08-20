@@ -1,7 +1,7 @@
 import React, {FunctionComponent, useCallback, useEffect, useState} from "react";
-import {Colors, Dialog, Provider, Snackbar, TextInput} from "react-native-paper";
+import {Colors, Provider, Snackbar, TextInput} from "react-native-paper";
 import {connect} from "react-redux";
-import {FlatList, StyleSheet, View, Text, Keyboard} from "react-native";
+import {StyleSheet, View} from "react-native";
 import {EDIT_CATEGORY_SCREEN, EDIT_LOCATION_SCREEN} from "../../ScreensNames";
 import Loader from "../../components/Loader";
 import appTheme from "../../theme/appTheme";
@@ -14,6 +14,7 @@ import {dismissError} from "../../redux/actions/ErrorActions";
 import {TopBarAction} from "../../redux/reducers/NavigationReducer";
 import {Category} from "../../data/types/Category";
 import {Location} from "../../data/types/Location";
+import MultiChoose, {BaseItem} from "../../components/MultiChoose";
 
 interface PassProps {
     location?: Location;
@@ -38,8 +39,10 @@ type Props = StateProps & DispatchProps & PassProps
 
 const EditLocationScreen: FunctionComponent<Props> = (props) => {
     const [input, setInput] = useState('')
-    const [menuVisible, setVisibleMenu] = useState(false)
-    // const [chosenCategoryIndex,setChosenCategory] = useState(props.location ? props.location.)
+    const chosenCategoriesTemp = props.categories
+        .filter(c=> props.location?.categories.includes(c.id))
+        .map(c=>({id:c.id,name:c.name}));
+    const [chosenCategories,setChosenCategories] = useState<BaseItem[]>(chosenCategoriesTemp)
 
     const onDismissSuccessSnackBar = useCallback(() => {
         props.successMessageHandled()
@@ -60,7 +63,8 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
                         props.popScreen()
                 }, {
                     icon: "content-save",
-                    onPress: input.length == 0 ? undefined : ()=>{}
+                    onPress: input.length == 0 ? undefined : () => {
+                    }
 
                 }
             ], [])
@@ -82,21 +86,13 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
                 style={styles.input}
                 // onEndEditing={doneEdit}
             />
-            <TextInput
-                onTouchStart={() => setVisibleMenu(true)}
-                label="Choose category"
-                // value={input}
-                // onChangeText={setInput}
-                mode={'outlined'}
-                style={styles.input}
-                onFocus={() => Keyboard.dismiss()}
+            <MultiChoose
+                itemsToChoose={props.categories}
+                onListChange={setChosenCategories}
+                chosenItems={chosenCategories}
+                addAction={'Choose Categories'}
+                style={[styles.input,{marginTop:20}]}
             />
-
-            <Dialog visible={menuVisible} onDismiss={() => setVisibleMenu(false)} style={{height: '90%'}}>
-                <Dialog.ScrollArea>
-                    <FlatList data={props.categories} renderItem={() => <Text>Try</Text>}/>
-                </Dialog.ScrollArea>
-            </Dialog>
             <Snackbar
                 visible={!!props.successMessage}
                 onDismiss={onDismissSuccessSnackBar}
