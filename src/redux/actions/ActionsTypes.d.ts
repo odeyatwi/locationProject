@@ -3,6 +3,7 @@ import {ActionType} from "typesafe-actions";
 import * as errorActions from "./ErrorActions";
 import * as categoriesActions from "./CategoryActions";
 import * as navigationActions from "./NavigationActions";
+import * as locationActions from "./LocationActions";
 import {ThunkDispatch} from "redux-thunk";
 
 
@@ -12,6 +13,8 @@ export type CategoryActions = ActionType<typeof categoriesActions> | ErrorAction
 
 export type NavigationActions = ActionType<typeof navigationActions> | ErrorActions;
 
-export type RootAction = CategoryActions | ErrorActions | NavigationActions | AnyAction;
+export type LocationActions = ActionType<typeof locationActions> | ErrorActions;
+
+export type RootAction = CategoryActions | ErrorActions | NavigationActions | LocationActions | AnyAction;
 
 export type anyDispatch = ThunkDispatch<{}, {}, Action>;
