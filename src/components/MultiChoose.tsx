@@ -72,7 +72,7 @@ const MultiChoose: FunctionComponent<Props> = (props)=> {
     return <>
         <View style={[style.container, props.style]}>
             <Chip icon={'plus'} onPress={showDialog} theme={{colors:{text: Colors.white}}} style={{backgroundColor:appTheme.colors.primary,marginTop:'2%',marginEnd:'2%'}}>{props.addAction}</Chip>
-            {props.chosenItems.map(item => <Chip theme={{colors:{text: Colors.white}}} onClose={removeItem(item.id)} style={{backgroundColor: Colors.lightBlueA700,marginTop:'2%',marginEnd:'2%'}}>{item.name}</Chip>)}
+            {props.chosenItems.map(item => <Chip key={item.id} theme={{colors:{text: Colors.white}}} onClose={removeItem(item.id)} style={{backgroundColor: Colors.lightBlueA700,marginTop:'2%',marginEnd:'2%'}}>{item.name}</Chip>)}
         </View>
         <Portal>
             <Dialog visible={modalVisible} onDismiss={hideDialog}>
@@ -81,8 +81,8 @@ const MultiChoose: FunctionComponent<Props> = (props)=> {
                               keyExtractor={item => item.id.toString()}/>
                 </Dialog.ScrollArea>
                 <Dialog.Actions>
-                    <Button onPress={saveFromModal}>Done</Button>
                     <Button onPress={hideDialog}>Cancel</Button>
+                    <Button onPress={saveFromModal}>Done</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>

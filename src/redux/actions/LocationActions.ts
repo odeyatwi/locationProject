@@ -57,7 +57,9 @@ export function getAllLocations(filter: Category[],sort: boolean = false) {
         dispatch(updateLocationsRegular.request());
         await openLocationTable();
         let locations: Location[] = await getAllLocationsFromDB();
-        locations = locations.filter(location => location.categories.some(category=>filter.map(c=>c.id).includes(category)))
+        if(filter.length > 0) {
+            locations = locations.filter(location => location.categories.some(category => filter.map(c => c.id).includes(category)))
+        }
         if (sort) {
             locations = locations.sort(sortNames)
         }
@@ -69,12 +71,12 @@ export function getAllLocationsGroup(filter: Category[], sort: boolean = false) 
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
         dispatch(updateLocationsGroup.request());
         await openLocationTable();
-
         let locations: Location[] = await getAllLocationsFromDB();
         let group: GroupList[] = filter.map(c => ({
             category: c,
             locations: locations.filter(location => location.categories.includes(c.id))
         }))
+        group = group.filter(g=> g.locations.length > 0)
         if (sort) {
             group = group.map(g => ({
                 ...g,

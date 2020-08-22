@@ -18,6 +18,7 @@ export interface LocationState {
     needUpdateLocation: boolean;
     successMessage?: string;
     isLoading: boolean;
+    isLoadingEdit: boolean;
 }
 
 const INIT_STATE: LocationState = {
@@ -27,27 +28,23 @@ const INIT_STATE: LocationState = {
     chosenLocationCategoryGroup: '',
     needUpdateLocation: true,
     isLoading: false,
+    isLoadingEdit: false
 }
-/*export const UPDATE_LOCATION_REGULAR = 'update location regular';
-export const UPDATE_LOCATION_ACTION = 'update location action';
-export const UPDATE_LOCATION_GROUP_BY = 'update location group by';
-export const UPDATE_CHOSEN_LOCATION = 'update chosen location';
-export const EDIT_LOCATION_SUCCESS_CLEAN = 'edit location success clear';
-export const EDIT_LOCATION_REQUEST = 'edit location request';
-export const EDIT_LOCATION_SUCCESS = 'edit location success';
-export const DELETE_LOCATION_REQUEST = 'delete location request';
-export const DELETE_LOCATION_SUCCESS = 'delete location success';*/
 export default (state: LocationState = INIT_STATE, action: LocationActions): LocationState => {
     switch (action.type) {
         case UPDATE_LOCATION_REGULAR:
             return {
                 ...INIT_STATE,
+                successMessage: state.successMessage,
+                needUpdateLocation: false,
                 locationGroup: state.locationGroup,
                 locations: action.payload,
             };
         case UPDATE_LOCATION_GROUP_BY:
             return {
                 ...INIT_STATE,
+                successMessage: state.successMessage,
+                needUpdateLocation: false,
                 locations: state.locations,
                 locationGroup: action.payload,
             };
@@ -59,13 +56,18 @@ export default (state: LocationState = INIT_STATE, action: LocationActions): Loc
             };
         case EDIT_LOCATION_REQUEST:
         case DELETE_LOCATION_REQUEST:
+            console.log('update/edit location success')
+            return { ...state, isLoadingEdit: true,needUpdateLocation: false};
         case UPDATE_LOCATION_ACTION:
             return { ...state, isLoading: true,needUpdateLocation: false};
         case EDIT_LOCATION_SUCCESS:
-            return {...state, successMessage:action.payload, isLoading: false, needUpdateLocation: true};
+            console.log('edit location success')
+            return {...state, successMessage:action.payload, isLoadingEdit: false, needUpdateLocation: true};
         case DELETE_LOCATION_SUCCESS:
-            return {...state, isLoading: false, needUpdateLocation: true};
+            console.log('delete location success')
+            return {...state, isLoadingEdit: false, needUpdateLocation: true};
         case EDIT_LOCATION_SUCCESS_CLEAN:
+            console.log('edit location success dismiss')
             return {...state,successMessage: undefined};
         default:
             return state;

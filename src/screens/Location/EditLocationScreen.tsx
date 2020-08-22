@@ -15,23 +15,17 @@ import {Category} from "../../data/types/Category";
 import {Location} from "../../data/types/Location";
 import MultiChoose, {BaseItem} from "../../components/MultiChoose";
 import {addLocation, clearLocationMessage, editLocation} from "../../redux/actions/LocationActions";
-import {GroupList} from "../../data/types/GroupList";
 
 interface PassProps {
     location?: Location;
 }
 
 interface StateProps {
-    // locations: Location[];
-    // locationGroup: GroupList[];
-    // needUpdate: boolean;
     isLoading: boolean;
     currentScreen: string;
     successMessage?: string;
     errorMessage?: string;
     categories: Category[];
-    // chosenLocationId: string;
-    // chosenLocationCategoryGroup: string;
 }
 
 interface DispatchProps {
@@ -56,6 +50,7 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     const [chosenCategories, setChosenCategories] = useState<BaseItem[]>(chosenCategoriesTemp)
 
     const onDismissSuccessSnackBar = useCallback(() => {
+        console.log('dismiss success')
         props.successMessageHandled()
         props.popScreen()
     }, [])
@@ -63,27 +58,6 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     const onDismissErrorSnackBar = useCallback(() => {
         props.dismissError()
     }, [])
-
-    useEffect(() => {
-        if (
-            name == '' ||
-            parseFloat(long) == undefined ||
-            parseFloat(lat) == undefined ||
-            chosenCategories.length == 0
-        ) {
-            setSaveDisable(true);
-        } else if (
-            props.location &&
-            props.location.name == name &&
-            props.location.lat.toString() == lat &&
-            props.location.long.toString() == long &&
-            chosenCategories.filter(c => props.location?.categories.includes(c.id.toString())).length == chosenCategories.length
-        ) {
-            setSaveDisable(true);
-        } else {
-            setSaveDisable(false);
-        }
-    }, [name, long, lat, chosenCategories])
 
     const setButtons = () => {
         if (props.currentScreen == EDIT_LOCATION_SCREEN) {
@@ -104,16 +78,43 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     const save = useCallback(() => {
         const latF = parseFloat(lat);
         const longF = parseFloat(long);
+        console.log('save',name)
         if (props.location) {
-            props.updateLocation(props.location.id, name, chosenCategories.map(c => c.id.toString()), {long:longF, lat:latF})
+            props.updateLocation(props.location.id, name, chosenCategories.map(c => c.id.toString()), {
+                long: longF,
+                lat: latF
+            })
         } else {
-            props.addLocation(name,chosenCategories.map(c=>c.id.toString()),{long:longF,lat:latF})
+            props.addLocation(name, chosenCategories.map(c => c.id.toString()), {long: longF, lat: latF})
         }
     }, [name, long, lat, chosenCategories, props.addLocation, props.updateLocation])
 
     useEffect(() => {
+        console.log('effect1')
+        if (
+            name == '' ||
+            parseFloat(long) == undefined ||
+            parseFloat(lat) == undefined ||
+            chosenCategories.length == 0
+        ) {
+            setSaveDisable(true);
+        } else if (
+            props.location &&
+            props.location.name == name &&
+            props.location.lat.toString() == lat &&
+            props.location.long.toString() == long &&
+            chosenCategories.filter(c => props.location?.categories.includes(c.id.toString())).length == props.location.categories.length
+        ) {
+            setSaveDisable(true);
+        } else {
+            setSaveDisable(false);
+        }
+    }, [name, long, lat, chosenCategories])
+
+    useEffect(() => {
+        console.log('effect2')
         setButtons()
-    }, [props.currentScreen, saveDisable])
+    }, [props.currentScreen, saveDisable,name, long, lat, chosenCategories, props.addLocation, props.updateLocation])
 
     let longInput: BaseTextInput | null = null;
     let latInput: BaseTextInput | null = null;
@@ -197,19 +198,15 @@ const styles = StyleSheet.create({
 function mapStateToProps(state: GlobalState): StateProps {
     const {categories} = state.categoriesState
     const {currentScreenName} = state.navigation
-    const {locationGroup, locations, needUpdateLocation, isLoading, successMessage, chosenLocationId, chosenLocationCategoryGroup} = state.locations
+    const {isLoadingEdit, successMessage} = state.locations
     const {error} = state.errors
+    console.log('loading',isLoadingEdit)
     return {
-        // locations,
-        // locationGroup,
-        // needUpdate: needUpdateLocation,
-        isLoading,
+        isLoading: isLoadingEdit,
         currentScreen: currentScreenName,
         successMessage,
         errorMessage: error,
         categories,
-        // chosenLocationId,
-        // chosenLocationCategoryGroup
     }
 }
 
