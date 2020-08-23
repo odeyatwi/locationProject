@@ -68,7 +68,7 @@ const CategoriesScreen: FunctionComponent<Props> = (props) => {
     }
 
     const setNotSelectedActions = () => {
-        props.updateActions("Categories", [
+        props.updateActions("", [
             {
                 icon: "plus",
                 onPress: openAddCategory
@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
 function mapStateToProps(state: GlobalState): StateProps {
     const {categories, selectedIndex, loadingCategories} = state.categoriesState;
     const {currentScreenName} = state.navigation;
-    const {error} = state.errors
     return {
         categories,
         currentIndex: selectedIndex,

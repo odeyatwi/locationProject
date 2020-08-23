@@ -48,7 +48,7 @@ export function getAllCategories() {
 export function addCategory(name: string) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
         dispatch(editCategoryAction.request());
-        await openCategoryDB()
+        await openCategoryDB();
         await saveCategoryToDB(name);
         dispatch(editCategoryAction.success('Category added successfully'));
         await dispatch(getAllCategories());

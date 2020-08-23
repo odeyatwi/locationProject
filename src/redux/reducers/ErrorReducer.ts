@@ -3,7 +3,7 @@ import {DISMISS_ERROR, HANDLE_ERROR} from "../actions/types";
 
 
 export interface ErrorState {
-    error?: string
+    error?: string;
 }
 
 const INIT_STATE: ErrorState = {}

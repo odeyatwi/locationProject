@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useCallback, useEffect, useState} from "react";
-import {FlatList, ListRenderItemInfo, StyleSheet, View, ViewProps} from "react-native";
+import {FlatList, Keyboard, ListRenderItemInfo, StyleSheet, View, ViewProps} from "react-native";
 import {Button, Chip, Dialog, Portal, Checkbox, Colors} from "react-native-paper";
 import appTheme from "../theme/appTheme";
 
@@ -14,7 +14,7 @@ interface Props extends ViewProps {
     itemsToChoose: BaseItem[];
     onListChange: (items: BaseItem[]) => void;
     chosenItems: BaseItem[];
-    addAction: string
+    addAction: string;
 }
 
 const MultiChoose: FunctionComponent<Props> = (props)=> {
@@ -22,20 +22,21 @@ const MultiChoose: FunctionComponent<Props> = (props)=> {
     const [modalIds, setModalIds] = useState<ID[]>(props.chosenItems.map(i => i.id));
 
     const removeItem = useCallback((id: ID) => () => {
-        const itemIndex = props.chosenItems.findIndex(i => i.id == id)
+        const itemIndex = props.chosenItems.findIndex(i => i.id == id);
         if (itemIndex > -1) {
             const newList = [...props.chosenItems];
-            newList.splice(itemIndex, 1)
-            props.onListChange(newList)
+            newList.splice(itemIndex, 1);
+            props.onListChange(newList);
         }
     }, [props.chosenItems, props.onListChange]);
 
     const hideDialog = useCallback(() => {
-        setModalVisible(false)
+        setModalVisible(false);
     }, []);
 
     const showDialog = useCallback(() => {
-        setModalVisible(true)
+        Keyboard.dismiss();
+        setModalVisible(true);
     }, []);
 
     const saveFromModal = useCallback(() => {
@@ -59,13 +60,13 @@ const MultiChoose: FunctionComponent<Props> = (props)=> {
     }, [modalIds]);
 
     useEffect(()=>{
-        setModalIds(props.chosenItems.map(i=>i.id))
-    },[props.chosenItems])
+        setModalIds(props.chosenItems.map(i=>i.id));
+    },[props.chosenItems]);
 
     const renderItem = (item: ListRenderItemInfo<BaseItem>) => {
         const checked = modalIds.includes(item.item.id);
-        const onPress = checked ? removeIdFromModal(item.item.id) : addIdFromModal(item.item.id)
-        const status = checked ? 'checked' : 'unchecked'
+        const onPress = checked ? removeIdFromModal(item.item.id) : addIdFromModal(item.item.id);
+        const status = checked ? 'checked' : 'unchecked';
         return <Checkbox.Item status={status} label={item.item.name} onPress={onPress} color={appTheme.colors.primary} uncheckedColor={appTheme.colors.primary}/>
     }
 

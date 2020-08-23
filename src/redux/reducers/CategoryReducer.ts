@@ -11,11 +11,11 @@ import {
 } from "../actions/types";
 
 export interface CategoryState {
-    categories: Category[],
-    selectedIndex: number,
-    loadingCategories: boolean,
-    editLoading: boolean,
-    editSuccessMessage?: string,
+    categories: Category[];
+    selectedIndex: number;
+    loadingCategories: boolean;
+    editLoading: boolean;
+    editSuccessMessage?: string;
 }
 
 const INIT_STATE: CategoryState = {
@@ -40,7 +40,7 @@ export default (state: CategoryState = INIT_STATE, action: CategoryActions): Cat
         case EDIT_CATEGORY_SUCCESS_CLEAN:
             return {...state, editSuccessMessage: undefined};
         case HANDLE_ERROR:
-            return {...state, loadingCategories: false, editLoading: false}
+            return {...state, loadingCategories: false, editLoading: false};
         default:
             return state;
     }

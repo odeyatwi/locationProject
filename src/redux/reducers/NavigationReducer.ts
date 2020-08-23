@@ -2,15 +2,15 @@ import {NavigationActions} from "../actions/ActionsTypes";
 import {SCREEN_NAME, UPDATE_TOP_BAR_ACTIONS} from "../actions/types";
 
 export interface TopBarAction {
-    icon: string,
-    onPress?: () => void
+    icon: string;
+    onPress?: () => void;
 }
 
 export interface NavigationState {
-    currentScreenName: string,
-    topBarTitle: string,
-    rightActions: TopBarAction[],
-    leftActions: TopBarAction[]
+    currentScreenName: string;
+    topBarTitle: string;
+    rightActions: TopBarAction[];
+    leftActions: TopBarAction[];
 }
 
 const INIT_STATE: NavigationState = {

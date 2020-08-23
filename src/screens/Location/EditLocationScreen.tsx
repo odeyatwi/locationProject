@@ -75,6 +75,7 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     }
 
     const save = useCallback(() => {
+        Keyboard.dismiss();
         const latF = parseFloat(lat);
         const longF = parseFloat(long);
         if (props.location) {
@@ -88,10 +89,11 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     }, [name, long, lat, chosenCategories, props.addLocation, props.updateLocation])
 
     useEffect(() => {
+        console.log(parseFloat('rewr'))
         if (
             name == '' ||
-            parseFloat(long) == undefined ||
-            parseFloat(lat) == undefined ||
+            isNaN(parseFloat(long)) ||
+            isNaN(parseFloat(lat)) ||
             chosenCategories.length == 0
         ) {
             setSaveDisable(true);

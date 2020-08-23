@@ -3,8 +3,8 @@ import {StyleSheet, View} from "react-native";
 import {ActivityIndicator} from "react-native-paper";
 
 interface Props{
-    color?:string,
-    isVisible: boolean
+    color?:string;
+    isVisible: boolean;
 }
 
 const Loader: FunctionComponent<Props> = (props) => {

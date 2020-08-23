@@ -58,10 +58,11 @@ export function getAllLocations(filter: Category[],sort: boolean = false) {
         await openLocationTable();
         let locations: Location[] = await getAllLocationsFromDB();
         if(filter.length > 0) {
-            locations = locations.filter(location => location.categories.some(category => filter.map(c => c.id).includes(category)))
+            locations = locations.filter(location => location.categories
+                .some(category => filter.map(c => c.id).includes(category)));
         }
         if (sort) {
-            locations = locations.sort(sortNames)
+            locations = locations.sort(sortNames);
         }
         dispatch(updateLocationsRegular.success(locations));
     }
@@ -75,13 +76,13 @@ export function getAllLocationsGroup(filter: Category[], sort: boolean = false) 
         let group: GroupList[] = filter.map(c => ({
             category: c,
             locations: locations.filter(location => location.categories.includes(c.id))
-        }))
-        group = group.filter(g=> g.locations.length > 0)
+        }));
+        group = group.filter(g=> g.locations.length > 0);
         if (sort) {
             group = group.map(g => ({
                 ...g,
                 locations: g.locations.sort(sortNames)
-            })).sort((a, b) => sortNames(a.category, b.category))
+            })).sort((a, b) => sortNames(a.category, b.category));
         }
         dispatch(updateLocationsGroup.success(group));
     }
@@ -90,7 +91,7 @@ export function getAllLocationsGroup(filter: Category[], sort: boolean = false) 
 export function addLocation(name: string, location: { lat: number, long: number }, categories: string[]) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
         dispatch(editLocationAction.request());
-        await openLocationTable()
+        await openLocationTable();
         await saveLocationToDB(name, categories, location.lat, location.long);
         dispatch(editLocationAction.success('Location added successfully'));
     }

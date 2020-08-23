@@ -5,10 +5,10 @@ import {GlobalState} from "../redux/reducers/GlobalState";
 import {TopBarAction} from "../redux/reducers/NavigationReducer";
 
 interface StateProps {
-    currentScreen: string,
-    title: string,
-    leftActions: TopBarAction[],
-    rightActions: TopBarAction[]
+    currentScreen: string;
+    title: string;
+    leftActions: TopBarAction[];
+    rightActions: TopBarAction[];
 }
 
 type Props = StateProps

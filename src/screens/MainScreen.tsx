@@ -33,8 +33,8 @@ const MainScreen: FunctionComponent<Props> = (props) => {
 
     const setScreen = useCallback((index:number)=>{
         setIndex(index);
-        props.updateCurrentScreen(routes[index].key)
-    },[routes])
+        props.updateCurrentScreen(routes[index].key);
+    },[routes]);
 
     const renderScene = BottomNavigation.SceneMap({
         [CATEGORIES_SCREEN]: () => <CategoriesScreen/>,
@@ -43,13 +43,13 @@ const MainScreen: FunctionComponent<Props> = (props) => {
 
     useEffect(() => {
         if (props.currentScreen == MAIN_SCREEN) {
-            props.updateCurrentScreen(routes[index].key)
+            props.updateCurrentScreen(routes[index].key);
         }
     }, [props.currentScreen]);
 
     const onDismissErrorSnackBar = useCallback(() => {
-        props.dismissError()
-    }, [])
+        props.dismissError();
+    }, []);
 
     return <View style={{flex:1}}>
         <BottomNavigation

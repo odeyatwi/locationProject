@@ -62,9 +62,6 @@ const LocationScreen: FunctionComponent<Props> = (props) => {
 
     const _renderItem = useCallback((item: ListRenderItemInfo<Location>) => {
         let isSelected = props.chosenLocationId == item.item.id
-        if (isGroup) {
-            isSelected = isSelected && '' == props.chosenLocationCategoryGroup
-        }
         return <ListItem
             onPress={() => props.updateChosenLocation(item.item.id)}
             isSelected={isSelected}
@@ -74,6 +71,7 @@ const LocationScreen: FunctionComponent<Props> = (props) => {
 
         />
     }, [props.chosenLocationId])
+
     const _renderItemGroup = useCallback((item: ListRenderItemInfo<GroupList>) => {
         return <GroupItem title={item.item.category.name}>
             {item.item.locations.map((location, index) => {

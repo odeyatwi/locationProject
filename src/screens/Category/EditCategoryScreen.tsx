@@ -55,6 +55,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
 
     const setButtons = () => {
         if (props.currentScreen == EDIT_CATEGORY_SCREEN) {
+            let isSaveDisable =  input.length == 0 || input == props.category?.name
             const title = props.category != undefined ? "Edit category" : "Add new category"
             props.updateActions(title, [
                 {
@@ -63,7 +64,7 @@ const EditCategoryScreen: FunctionComponent<Props> = (props) => {
                         props.popScreen()
                 }, {
                     icon: "content-save",
-                    onPress: input.length == 0 ? undefined : saveAction
+                    onPress: isSaveDisable  ? undefined : saveAction
 
                 }
             ], [])
