@@ -56,18 +56,14 @@ export default (state: LocationState = INIT_STATE, action: LocationActions): Loc
             };
         case EDIT_LOCATION_REQUEST:
         case DELETE_LOCATION_REQUEST:
-            console.log('update/edit location success')
             return { ...state, isLoadingEdit: true,needUpdateLocation: false};
         case UPDATE_LOCATION_ACTION:
             return { ...state, isLoading: true,needUpdateLocation: false};
         case EDIT_LOCATION_SUCCESS:
-            console.log('edit location success')
             return {...state, successMessage:action.payload, isLoadingEdit: false, needUpdateLocation: true};
         case DELETE_LOCATION_SUCCESS:
-            console.log('delete location success')
             return {...state, isLoadingEdit: false, needUpdateLocation: true};
         case EDIT_LOCATION_SUCCESS_CLEAN:
-            console.log('edit location success dismiss')
             return {...state,successMessage: undefined};
         default:
             return state;

@@ -33,7 +33,6 @@ export async function saveLocationToDB(name: string, categories: string[], lat: 
                 'INSERT INTO table_location (name,categories,lat,long) VALUES (?,?,?,?)',
                 [name, categoriesString, lat, long],
                 (tx, results) => {
-                    console.log('save category', results.rowsAffected)
                     if (results.rowsAffected == 0) reject('Can`t save this Location');
                     else resolve();
                 },

@@ -89,7 +89,6 @@ export function getAllLocationsGroup(filter: Category[], sort: boolean = false) 
 
 export function addLocation(name: string, location: { lat: number, long: number }, categories: string[]) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-        console.log('add location',name,categories,location)
         dispatch(editLocationAction.request());
         await openLocationTable()
         await saveLocationToDB(name, categories, location.lat, location.long);
@@ -107,8 +106,6 @@ export function deleteLocation(id: string) {
 
 export function editLocation(id: string, newName: string,newLocation:{lat:number,long:number},newCategories: string[]) {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-        console.log('edit location',newName,newCategories,newLocation)
-
         dispatch(editLocationAction.request());
         await updateLocation(id, newName,newCategories,newLocation.lat,newLocation.long);
         dispatch(editLocationAction.success('Location update successfully'));

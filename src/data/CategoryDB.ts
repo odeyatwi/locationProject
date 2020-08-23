@@ -29,7 +29,6 @@ export async function saveCategoryToDB(name: string) {
                 'INSERT INTO table_category (name) VALUES (?)',
                 [name],
                 (tx, results) => {
-                    console.log('save category',results.rowsAffected)
                     if (results.rowsAffected == 0) reject('Can`t save this Category');
                     else resolve();
                 },
@@ -63,7 +62,6 @@ export async function getAllCategoriesFromDB() {
 
 export async function deleteCategoryFromDB(category_id: string) {
     return new Promise<void>((resolve, reject) => {
-        console.log('delete', category_id)
         db.transaction(tx => {
             tx.executeSql(
                 'DELETE FROM table_category where rowid=?',

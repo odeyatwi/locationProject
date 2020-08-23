@@ -50,7 +50,6 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     const [chosenCategories, setChosenCategories] = useState<BaseItem[]>(chosenCategoriesTemp)
 
     const onDismissSuccessSnackBar = useCallback(() => {
-        console.log('dismiss success')
         props.successMessageHandled()
         props.popScreen()
     }, [])
@@ -78,7 +77,6 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     const save = useCallback(() => {
         const latF = parseFloat(lat);
         const longF = parseFloat(long);
-        console.log('save',name)
         if (props.location) {
             props.updateLocation(props.location.id, name, chosenCategories.map(c => c.id.toString()), {
                 long: longF,
@@ -90,7 +88,6 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     }, [name, long, lat, chosenCategories, props.addLocation, props.updateLocation])
 
     useEffect(() => {
-        console.log('effect1')
         if (
             name == '' ||
             parseFloat(long) == undefined ||
@@ -112,7 +109,6 @@ const EditLocationScreen: FunctionComponent<Props> = (props) => {
     }, [name, long, lat, chosenCategories])
 
     useEffect(() => {
-        console.log('effect2')
         setButtons()
     }, [props.currentScreen, saveDisable,name, long, lat, chosenCategories, props.addLocation, props.updateLocation])
 
@@ -200,7 +196,6 @@ function mapStateToProps(state: GlobalState): StateProps {
     const {currentScreenName} = state.navigation
     const {isLoadingEdit, successMessage} = state.locations
     const {error} = state.errors
-    console.log('loading',isLoadingEdit)
     return {
         isLoading: isLoadingEdit,
         currentScreen: currentScreenName,
